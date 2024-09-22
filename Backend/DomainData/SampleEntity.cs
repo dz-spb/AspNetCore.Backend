@@ -2,12 +2,7 @@
 
 public class SampleEntity
 {
-    public SampleEntity(Guid id)
-    {
-        Id = id;
-    }
-
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     public object? SomeData { get; set; }
 }

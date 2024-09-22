@@ -10,20 +10,23 @@ public class SampleController : ControllerBase
     private readonly ISampleRepository _sampleRepository;
     private readonly ILogger<SampleController> _logger;
 
-    public SampleController(ISampleRepository sampleRepo, ILogger<SampleController> logger)
+    public SampleController(ISampleRepository sampleRepository, ILogger<SampleController> logger)
     {
-        _sampleRepository = sampleRepo;
-        _logger = logger;
+        _sampleRepository = sampleRepository ?? throw new ArgumentNullException(nameof(sampleRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Get(Guid id) =>    
-        Ok(await _sampleRepository.GetAsync(id));
+    public async Task<IActionResult> Get(Guid id)
+    {
+        var entity = await _sampleRepository.GetAsync(id);
+        return entity is null ? NotFound() : Ok(entity);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] object data)
     {
-        var result = await _sampleRepository.AddAsync(new SampleEntity(Guid.NewGuid()) { SomeData = data });
+        var result = await _sampleRepository.AddAsync(new SampleEntity { Id = Guid.NewGuid(), SomeData = data });
 
         return CreatedAtAction("Get", new { result.Id }, result);
     }
