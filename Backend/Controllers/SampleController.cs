@@ -26,6 +26,8 @@ public class SampleController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] object data)
     {
+        _logger.LogInformation($"POST /sample {data}");
+
         var result = await _sampleRepository.AddAsync(new SampleEntity { Id = Guid.NewGuid(), SomeData = data });
 
         return CreatedAtAction("Get", new { result.Id }, result);

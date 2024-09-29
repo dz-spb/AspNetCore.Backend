@@ -1,3 +1,5 @@
+using Backend.Logging;
+
 namespace Backend;
 
 public class Program
@@ -14,6 +16,7 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddMemoryCache();
         builder.Services.AddRepositories();
+        builder.Logging.AddCustomLogger();
 
         var app = builder.Build();
 
